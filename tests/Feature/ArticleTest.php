@@ -23,7 +23,7 @@ class ArticleTest extends TestCase
     /** @test */
     public function it_shows_a_collection_of_articles()
     {
-        $this->json('GET', '/api/articles')
+        $this->json('GET', "/api/articles?api_token={$this->user->api_token}")
             ->assertStatus(200)
             ->assertJson([
                 'data' => [
@@ -43,7 +43,7 @@ class ArticleTest extends TestCase
     /** @test */
     public function it_shows_an_article()
     {
-        $this->json('GET', "/api/articles/{$this->article->slug}")
+        $this->json('GET', "/api/articles/{$this->article->slug}?api_token={$this->user->api_token}")
             ->assertStatus(200)
             ->assertJson([
 
@@ -68,6 +68,7 @@ class ArticleTest extends TestCase
             'title' => 'lorem insu dolor',
             'content' => 'lorem insu dolor',
             'thumbnail' => 'https://picsum.photos/250/500',
+            'api_token' => $this->user->api_token,
         ];
 
         $this->json('POST', '/api/articles', $data)
@@ -80,8 +81,7 @@ class ArticleTest extends TestCase
     /** @test */
     public function it_deletes_an_article()
     {
-
-        $this->json('DELETE', "api/articles/{$this->article->slug}")
+        $this->json('DELETE', "api/articles/{$this->article->slug}", ['api_token' => $this->user->api_token])
             ->assertStatus(204);
 
         $this->assertNull(Article::find($this->article->id));
