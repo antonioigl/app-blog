@@ -78,6 +78,17 @@ class ArticleTest extends TestCase
 
     }
 
+
+    /** @test */
+    public function the_owner_can_delete_the_Article_fails()
+    {
+        $user = factory(User::class)->create();
+
+        $this->json('DELETE', "api/articles/{$this->article->slug}", ['api_token' => $user->api_token])
+            ->assertStatus(403);
+
+    }
+
     /** @test */
     public function it_deletes_an_article()
     {
