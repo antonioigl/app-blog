@@ -17,6 +17,7 @@ class ArticleTest extends TestCase
         parent::setUp();
         $this->user = factory(User::class)->create();
         $this->article = factory(Article::class)->create();
+        $this->actingAs($this->user);
     }
 
     /** @test */
@@ -60,6 +61,7 @@ class ArticleTest extends TestCase
     /** @test */
     public function it_creates_a_single_article()
     {
+        //$this->withoutExceptionHandling();
         $this->assertEquals(1, Article::count());
 
         $data = [
