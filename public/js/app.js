@@ -1929,7 +1929,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   created: function created() {
     var _this = this;
 
-    window.token = this.user.api_token;
+    window.id = this.user.id;
     axios.interceptors.request.use(function (config) {
       console.log(config);
 
@@ -2119,6 +2119,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2136,10 +2142,24 @@ __webpack_require__.r(__webpack_exports__);
       axios.get("/api/articles/".concat(this.$route.params.slug)).then(function (response) {
         _this.article = response.data;
         _this.attributes = response.data.attributes;
-        console.log(response);
       })["catch"](function (err) {
         console.log(err);
       });
+    },
+    edit: function edit() {},
+    destroy: function destroy() {
+      var _this2 = this;
+
+      axios["delete"]("api/articles/".concat(this.article.slug)).then(function (response) {
+        _this2.$router.push({
+          path: '/my_articles'
+        });
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    can: function can() {
+      return this.article.user_id === window.id;
     }
   }
 });
@@ -38081,6 +38101,28 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "text-center" }, [
     _c("div", { staticClass: "font-sans container" }, [
+      _vm.can()
+        ? _c("div", { staticClass: "text-right" }, [
+            _c(
+              "button",
+              {
+                staticClass: "bg-red-500 py-4 px-4 text-white rounded",
+                on: { click: _vm.destroy }
+              },
+              [_vm._v("Eliminar")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "bg-blue-500 py-4 px-4 text-white rounded",
+                on: { click: _vm.edit }
+              },
+              [_vm._v("Editar")]
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
       _c(
         "h1",
         {

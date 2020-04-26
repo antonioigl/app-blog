@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Hash;
             'password' => Hash::make('123456'),
         ]);
 
+        factory(User::class)->create();
+
         factory(Article::class)->times(20)->create();
         factory(Comment::class)->times(10)->create();
 
