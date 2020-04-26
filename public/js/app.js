@@ -1995,7 +1995,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['action', 'article'],
   data: function data() {
-    return {};
+    return {
+      errors: []
+    };
   },
   methods: {
     createArticle: function createArticle() {
@@ -2012,7 +2014,9 @@ __webpack_require__.r(__webpack_exports__);
           }
         });
       })["catch"](function (err) {
-        console.log(err);
+        if (err.response.status === 422) {
+          _this.getErrors(err.response.data.errors);
+        }
       });
     },
     updateArticle: function updateArticle() {
@@ -2029,7 +2033,9 @@ __webpack_require__.r(__webpack_exports__);
           }
         });
       })["catch"](function (err) {
-        console.log(err);
+        if (err.response.status === 422) {
+          _this2.getErrors(err.response.data.errors);
+        }
       });
     },
     submitForm: function submitForm() {
@@ -2038,6 +2044,14 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.updateArticle();
       }
+    },
+    getErrors: function getErrors(errors) {
+      var _this3 = this;
+
+      this.errors = [];
+      Object.values(errors).forEach(function (value) {
+        _this3.errors.push(value[0]);
+      });
     }
   },
   computed: {

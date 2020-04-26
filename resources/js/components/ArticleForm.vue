@@ -31,7 +31,7 @@
 
         data() {
             return {
-
+                errors: []
             }
         },
 
@@ -44,7 +44,9 @@
                     this.$router.push({name: 'show', params: { slug }});
                 })
                 .catch(err => {
-                    console.log(err);
+                    if(err.response.status === 422){
+                        this.getErrors(err.response.data.errors);
+                    }
                 });
             },
 
@@ -56,7 +58,9 @@
                         this.$router.push({name: 'show', params: { slug }});
                     })
                     .catch(err => {
-                        console.log(err);
+                        if(err.response.status === 422){
+                            this.getErrors(err.response.data.errors);
+                        }
                     });
             },
 
@@ -68,6 +72,13 @@
                   this.updateArticle();
               }
             },
+
+            getErrors(errors) {
+                this.errors = [];
+                Object.values(errors).forEach(value => {
+                    this.errors.push(value[0]);
+                });
+            }
         },
 
         computed: {
