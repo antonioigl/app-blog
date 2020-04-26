@@ -1908,6 +1908,12 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -1920,7 +1926,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['user'],
   created: function created() {
+    var _this = this;
+
     window.token = this.user.api_token;
+    axios.interceptors.request.use(function (config) {
+      console.log(config);
+
+      if (config.method == 'get') {
+        config.url = "".concat(config.url, "?api_token=").concat(_this.user.api_token);
+      } else {
+        config.data = _objectSpread({}, config.data, {
+          api_token: _this.user.api_token
+        });
+      }
+
+      return config;
+    });
   }
 });
 
@@ -1990,16 +2011,14 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    console.log('created');
     this.fetchArticles();
   },
   methods: {
     fetchArticles: function fetchArticles() {
       var _this = this;
 
-      axios.get("/api/articles?api_token=".concat(window.token)).then(function (response) {
+      axios.get('/api/articles').then(function (response) {
         _this.articles = response.data.data;
-        console.log(_this.articles);
       })["catch"](function (err) {
         console.log(err);
       });

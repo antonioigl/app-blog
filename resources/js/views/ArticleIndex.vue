@@ -37,16 +37,14 @@
         },
 
         created() {
-            console.log('created');
             this.fetchArticles();
         },
 
         methods: {
             fetchArticles(){
-                axios.get(`/api/articles?api_token=${window.token}`)
+                axios.get('/api/articles')
                 .then(response => {
                     this.articles = response.data.data;
-                    console.log(this.articles);
                 })
                 .catch(err => {
                    console.log(err);
