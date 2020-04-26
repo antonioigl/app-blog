@@ -1933,6 +1933,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       console.log(config);
 
       if (config.method == 'get') {
+        if (config.url.match('/\?./')) {
+          var url = config.url.split("?");
+          var page = url[1];
+          url = url[0];
+          config.url = "".concat(url, "?api_token=").concat(_this.user.api_token, "&").concat(page);
+          return config;
+        }
+
         config.url = "".concat(config.url, "?api_token=").concat(_this.user.api_token);
       } else {
         config.data = _objectSpread({}, config.data, {
@@ -1975,6 +1983,17 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2007,7 +2026,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      articles: []
+      articles: [],
+      pagination: []
     };
   },
   created: function created() {
@@ -2017,11 +2037,22 @@ __webpack_require__.r(__webpack_exports__);
     fetchArticles: function fetchArticles() {
       var _this = this;
 
-      axios.get('/api/articles').then(function (response) {
+      var endPoint = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '/api/articles';
+      axios.get(endPoint).then(function (response) {
         _this.articles = response.data.data;
+
+        _this.makePagination(_objectSpread({}, response.data.meta, {}, response.data.links));
+
+        console.log(response);
       })["catch"](function (err) {
         console.log(err);
       });
+    },
+    makePagination: function makePagination(data) {
+      this.pagination = data;
+    },
+    doPagination: function doPagination(page) {
+      this.fetchArticles("api/articles?page=".concat(page));
     }
   }
 });
@@ -37786,7 +37817,7 @@ var render = function() {
           "div",
           {
             key: article.id,
-            staticClass: "max-w-sm rounded overflow-hidden shadow-lg mx-4"
+            staticClass: "max-w-sm rounded overflow-hidden shadow-lg mx-4 my-4"
           },
           [
             _c("img", {
@@ -37814,6 +37845,27 @@ var render = function() {
             _vm._m(0, true)
           ]
         )
+      }),
+      0
+    ),
+    _vm._v(" "),
+    _c(
+      "ul",
+      { staticClass: "flex justify-center" },
+      _vm._l(_vm.pagination.last_page, function(page) {
+        return _c("li", { key: page, staticClass: "py-2 px-2" }, [
+          _c(
+            "button",
+            {
+              on: {
+                click: function($event) {
+                  return _vm.doPagination(page)
+                }
+              }
+            },
+            [_vm._v(_vm._s(page))]
+          )
+        ])
       }),
       0
     )

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="flex flex-wrap justify-center">
-            <div v-for="article of articles" :key="article.id" class="max-w-sm rounded overflow-hidden shadow-lg mx-4">
+            <div v-for="article of articles" :key="article.id" class="max-w-sm rounded overflow-hidden shadow-lg mx-4 my-4">
 
                 <img class="w-full" :src="article.attributes.picture" alt="Sunset in the mountain">
                 <div class="px-6 py-4">
@@ -24,6 +24,11 @@
                 </div>
             </div>
         </div>
+        <ul class="flex justify-center">
+            <li v-for="page in pagination.last_page" :key="page" class="py-2 px-2">
+                <button @click="doPagination(page)">{{ page }}</button>
+            </li>
+        </ul>
     </div>
 </template>
 
@@ -33,6 +38,7 @@
         data(){
             return {
                 articles: [],
+                pagination: [],
             }
         },
 
@@ -41,15 +47,25 @@
         },
 
         methods: {
-            fetchArticles(){
-                axios.get('/api/articles')
+            fetchArticles(endPoint = '/api/articles'){
+                axios.get(endPoint)
                 .then(response => {
                     this.articles = response.data.data;
+                    this.makePagination({ ...response.data.meta, ...response.data.links });
+                    console.log(response);
                 })
                 .catch(err => {
                    console.log(err);
                 });
-            }
+            },
+
+            makePagination(data){
+                this.pagination = data;
+            },
+
+            doPagination(page){
+                this.fetchArticles(`api/articles?page=${page}`);
+            },
         }
     }
 </script>
