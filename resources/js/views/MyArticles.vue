@@ -1,9 +1,8 @@
 <template>
     <div>
-        <ArticleList endpoint="/api/articles"></ArticleList>
+        <ArticleList endpoint="/api/my_articles"></ArticleList>
     </div>
 </template>
-
 
 <script>
 

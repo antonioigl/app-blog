@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Article;
 use App\Http\Resources\ArticleResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use function request;
 
@@ -78,6 +79,12 @@ class ArticleController extends Controller
         $this->authorize('delete', $article);
         $article->delete();
         return response([], Response::HTTP_NO_CONTENT);
+    }
+
+    public function myArticles()
+    {
+        $user = Auth::user();
+        return ArticleResource::collection($user->articles()->paginate(3));
     }
 
     public function validateData()
