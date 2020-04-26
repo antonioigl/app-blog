@@ -20,7 +20,7 @@ class ArticleResource extends JsonResource
             'user_id' => $this->user_id,
             'attributes' => [
                 'title' => $this->title,
-                'description' => $this->content,
+                'content' => $this->content,
                 'picture' => $this->thumbnail,
                 'created_at' => $this->created_at->diffForHumans(),
 

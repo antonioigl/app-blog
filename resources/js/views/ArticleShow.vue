@@ -11,7 +11,7 @@
                     {{attributes.title}}
                 </h1>
                 <p class="text-sm md:text-base font-normal text-gray-600">{{attributes.created_at}}</p>
-                <p class="py-6">{{attributes.description}}</p>
+                <p class="py-6">{{attributes.content}}</p>
             </div>
     </div>
 </template>
@@ -43,7 +43,8 @@
             },
 
             edit() {
-
+                let slug = this.article.slug;
+                this.$router.push({ name: 'edit', params: { slug } });
             },
 
             destroy() {

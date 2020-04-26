@@ -48,9 +48,24 @@
                 });
             },
 
+            updateArticle() {
+                this.article.attributes.thumbnail = 'https://picsum.photos/250/200'
+                axios.put(`/api/articles/${this.article.slug}`, this.article.attributes)
+                    .then(response => {
+                        let slug = response.data.data.slug;
+                        this.$router.push({name: 'show', params: { slug }});
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            },
+
             submitForm() {
               if (this.action === 'create'){
                   this.createArticle();
+              }
+              else{
+                  this.updateArticle();
               }
             },
         },
