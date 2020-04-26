@@ -47,14 +47,13 @@
             },
 
             destroy() {
-                axios.delete(`api/articles/${this.article.slug}`)
-                .then(response => {
-                    this.$router.push({ path: '/my_articles' });
-                })
-
-                .catch(err => {
-                    console.log(err);
-                });
+                axios.delete(`/api/articles/${this.article.slug}`)
+                    .then(response => {
+                        this.$router.push({ path: '/my_articles' });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             },
 
             can() {
