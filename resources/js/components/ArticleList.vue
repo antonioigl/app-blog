@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="flex flex-wrap justify-center">
-            <div v-for="article of articles" :key="article.id" class="max-w-sm rounded overflow-hidden shadow-lg mx-4 my-4">
+            <div @click="show(article.slug)" v-for="article of articles" :key="article.id" class="max-w-sm rounded overflow-hidden shadow-lg mx-4 my-4">
 
                 <img class="w-full" :src="article.attributes.picture" alt="Sunset in the mountain">
                 <div class="px-6 py-4">
@@ -67,6 +67,10 @@
 
             doPagination(page){
                 this.fetchArticles(`${this.endpoint}?page=${page}`);
+            },
+
+            show(slug){
+                this.$router.push({name: 'show', params: {slug} });
             },
         }
 
